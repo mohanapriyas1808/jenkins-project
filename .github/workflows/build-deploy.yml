@@ -57,7 +57,7 @@ jobs:
             sudo systemctl enable docker
 
             # Pull the latest Docker image from Docker Hub
-            docker pull your-dockerhub-username/2048-game:latest
+            docker pull mohanapriya1808/2048-game:latest
 
             # Stop the existing container if running
             docker stop 2048-game || true
