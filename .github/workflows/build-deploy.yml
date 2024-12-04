@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            # Update the package index
+            
             sudo apt-get update
 
             # Install Docker if not already installed
