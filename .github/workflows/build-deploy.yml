@@ -34,34 +34,20 @@ jobs:
         run: docker push mohanapriya1808/2048-game:latest
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
 
     steps:
-      # Set up SSH to EC2
-      - name: SSH to EC2 Instance
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script: |
-            
-            sudo apt-get update
+      # Pull the latest Docker image
+      - name: Pull Docker Image
+        run: docker pull mohanapriya1808/2048-game:latest
 
-            # Install Docker if not already installed
-            sudo apt-get install -y docker.io
+      # Stop and remove existing container
+      - name: Stop and Remove Container
+        run: |
+          docker stop 2048-game || true
+          docker rm 2048-game || true
 
-            # Start Docker service if it's not already running
-            sudo systemctl start docker
-            sudo systemctl enable docker
-
-            # Pull the latest Docker image from Docker Hub
-            docker pull mohanapriya1808/2048-game:latest
-
-            # Stop the existing container if running
-            docker stop 2048-game || true
-            docker rm 2048-game || true
-
-            # Run the new container
-            docker run -d -p 80:3000 --name 2048-game --restart unless-stopped mohanapriya1808/2048-game:latest
+      # Run the new container
+      - name: Run Docker Container
+        run: docker run -d -p 80:3000 --name 2048-game --restart unless-stopped mohanapriya1808/2048-game:latest
